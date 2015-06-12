@@ -79,5 +79,9 @@ class RestApiUrlMappings {
         '/observations'(method: 'GET', controller: 'observation', action: 'indexStandalone')
 
         '/platforms' (method: 'GET', controller: 'platform', action: 'index')
+
+        "/studies/$studyId/platforms/$platform/tissue_type/$tissueType" (
+                method: 'GET', controller: 'validation', action: 'indexByTissueType'
+        )
     }
 }
