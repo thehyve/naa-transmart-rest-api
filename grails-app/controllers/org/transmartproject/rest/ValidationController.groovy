@@ -32,7 +32,7 @@ class ValidationController {
     /**
      * GET request on /validation/studies/{studyId}/subjects
      *
-     *  This will return a Boolean indicating if the given tissue type is valid for the study
+     *  This will return a Boolean indicating if the given subjects are valid for the study
      *  and platform.
      */
     def indexBySubjects() {
@@ -40,6 +40,36 @@ class ValidationController {
         def subjectIds = params.getList('subjects').collect { it as String }
         def returnValue = [
                 'valid': validationService.validateSubjects(studyId, subjectIds)
+        ]
+        respond returnValue
+    }
+
+    /**
+     * GET request on /validation/studies/{studyId}/samples
+     *
+     *  This will return a Boolean indicating if the given list of samples is valid for the study
+     *  and platform.
+     */
+    def indexBySamples() {
+        def studyId = params.studyId
+        def sampleIds = params.getList('samples').collect { it as String }
+        def returnValue = [
+                'valid': validationService.validateSamples(studyId, sampleIds)
+        ]
+        respond returnValue
+    }
+
+    /**
+     * GET request on /validation/platform/{platform}/platform_ids
+     *
+     *  This will return a Boolean indicating if the given list of samples is valid for the study
+     *  and platform.
+     */
+    def indexByPlatformIds() {
+        def platform = params.platform
+        def platformIds = params.getList('platform_ids').collect { it as String }
+        def returnValue = [
+                'valid': validationService.validatePlatformIds(platform, platformIds)
         ]
         respond returnValue
     }

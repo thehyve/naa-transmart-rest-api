@@ -50,6 +50,41 @@ class ValidationService {
         return !subjectsHash.isEmpty()
     }
 
+    def validateSamples(studyId, sampleIds) {
+        def sql = sql(dataSource)
+        def sampleHash = new HashSet<String>()
+        sampleIds.each { sampleHash.add(it as String) }
+
+        def study = studiesResourceService.getStudyById(studyId as String)
+        def trial = getTrialShortName(study, sql)
+
+        def existing = new HashSet<String>()
+        sql.eachRow("select ssm.sample_cd from de_subject_sample_mapping ssm where ssm.trial_name = ?", [trial]) { row ->
+            def id = row.sample_cd
+            if (sampleHash.contains(id)) {
+                existing << id
+            }
+        }
+        return !existing.isEmpty()
+    }
+
+    def validatePlatformIds(platform, platformIds) {
+        def sql = sql(dataSource)
+        def query = "select gpl.platform from de_gpl_info gpl where gpl.title = ?"
+        def gpl = sql.firstRow(query, [platform]).platform
+
+        query = "select mrna.probe_id from de_mrna_annotation mrna where mrna.GPL_ID = ?"
+
+        Set<String> platformIdsHash = new HashSet<String>()
+        platformIds.each { platformIdsHash.add(it as String) }
+
+        sql.eachRow(query,[gpl], { row ->
+            platformIdsHash.remove(row.probe_id)
+        })
+
+        return !platformIdsHash.isEmpty()
+    }
+
     // -------------------- Private Methods --------------------
 
     private static String getTrialShortName(studyPath, sql) {
