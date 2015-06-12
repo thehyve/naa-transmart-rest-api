@@ -1,11 +1,11 @@
 package org.transmartproject.rest
+
+import grails.transaction.Transactional
 import groovy.sql.Sql
 
 import javax.sql.DataSource
 
-/**
- * @author Scott Faria <scott.faria@genedata.com>
- */
+@Transactional
 class PlatformService {
 
     // -------------------- Private Variables --------------------

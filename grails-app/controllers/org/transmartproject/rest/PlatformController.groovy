@@ -1,7 +1,5 @@
 package org.transmartproject.rest
-/**
- * @author Scott Faria <scott.faria@genedata.com>
- */
+
 class PlatformController {
 
     // -------------------- Statics --------------------
