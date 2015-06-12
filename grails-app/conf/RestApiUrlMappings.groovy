@@ -80,7 +80,7 @@ class RestApiUrlMappings {
 
         '/platforms' (method: 'GET', controller: 'platform', action: 'index')
 
-        "/studies/$studyId/platforms/$platform/tissue_type/$tissueType" (
+        "/validation/studies/$studyId/platforms/$platform/tissue_type/$tissueType" (
                 method: 'GET', controller: 'validation', action: 'indexByTissueType'
         )
     }
