@@ -2,6 +2,11 @@ package org.transmartproject.rest
 
 class ValidationController {
 
+    // -------------------- Statics --------------------
+
+    @SuppressWarnings("GroovyUnusedDeclaration")
+    static responseFormats = ['json', 'hal']
+
     // -------------------- Private Variables --------------------
 
     def validationService
@@ -17,7 +22,10 @@ class ValidationController {
         def studyId = params.studyId
         def platform = params.platform
         def tissueType = params.tissueType
-        render validationService.validateTissueType(studyId, platform, tissueType)
+        def returnValue = [
+                'valid': validationService.validateTissueType(studyId, platform, tissueType)
+        ]
+        respond returnValue
     }
 
 }

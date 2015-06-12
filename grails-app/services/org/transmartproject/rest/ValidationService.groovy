@@ -3,6 +3,7 @@ import grails.transaction.Transactional
 import groovy.sql.Sql
 
 import javax.sql.DataSource
+import java.util.regex.Matcher
 
 @Transactional
 class ValidationService {
@@ -22,6 +23,26 @@ class ValidationService {
         def queryParam = "${studyName?.toUpperCase()}%${platform?.toUpperCase()}\\${tissueType?.toUpperCase()}%" as String
         def row = sql(dataSource).firstRow(query, [queryParam])
         return row.count == 0
+    }
+
+    def validateSubjects(studyId, subjects) {
+        def sql = sql(dataSource)
+        String trial = GexHelperUtils.getTrialShortName(study, sql) + "%"
+
+        Set<String> subjectsHash = new HashSet<String>()
+        subjects.each { subjectsHash.add(it) }
+
+        sql.eachRow("select pd.sourcesystem_cd from patient_dimension pd where pd.sourcesystem_cd like ?", [trial], { row ->
+            String source = row.sourcesystem_cd
+            Matcher match = SUBJECT.matcher(source)
+            boolean found = match.find()
+            if (found) {
+                String subjectId = match.group(1)
+                subjectsHash.remove(subjectId)
+            }
+        })
+
+        return subjectsHash
     }
 
     // -------------------- Private Methods --------------------
