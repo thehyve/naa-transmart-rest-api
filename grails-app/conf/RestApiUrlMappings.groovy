@@ -83,5 +83,9 @@ class RestApiUrlMappings {
         "/validation/studies/$studyId/platforms/$platform/tissue_type/$tissueType" (
                 method: 'GET', controller: 'validation', action: 'indexByTissueType'
         )
+
+        "/validation/studies/$studyId/subjects" (
+                method: 'GET', controller: 'validation', action: 'indexBySubjects'
+        )
     }
 }

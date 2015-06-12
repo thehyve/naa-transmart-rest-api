@@ -4,9 +4,13 @@ import groovy.sql.Sql
 
 import javax.sql.DataSource
 import java.util.regex.Matcher
+import java.util.regex.Pattern
 
 @Transactional
 class ValidationService {
+    // -------------------- Private Variables --------------------
+
+    private final static Pattern SUBJECT = ~/:([^:]+)\$"/
 
     // -------------------- Private Variables --------------------
 
@@ -27,10 +31,11 @@ class ValidationService {
 
     def validateSubjects(studyId, subjects) {
         def sql = sql(dataSource)
-        String trial = GexHelperUtils.getTrialShortName(study, sql) + "%"
+        def study = studiesResourceService.getStudyById(studyId as String)
+        String trial = getTrialShortName(study.ontologyTerm.fullName, sql) + "%"
 
         Set<String> subjectsHash = new HashSet<String>()
-        subjects.each { subjectsHash.add(it) }
+        subjects.each { subjectsHash.add(it as String) }
 
         sql.eachRow("select pd.sourcesystem_cd from patient_dimension pd where pd.sourcesystem_cd like ?", [trial], { row ->
             String source = row.sourcesystem_cd
@@ -42,10 +47,15 @@ class ValidationService {
             }
         })
 
-        return subjectsHash
+        return !subjectsHash.isEmpty()
     }
 
     // -------------------- Private Methods --------------------
+
+    private static String getTrialShortName(studyPath, sql) {
+        String trialQuery = "select c.sourcesystem_cd from i2b2 c where c.c_hlevel = 1 and c.c_fullname = ?"
+        return sql.firstRow(trialQuery, [studyPath]).sourcesystem_cd
+    }
 
     private static Sql sql(DataSource source) {
         Sql sql = new Sql(source)
