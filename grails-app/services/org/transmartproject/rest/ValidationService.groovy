@@ -1,6 +1,6 @@
 package org.transmartproject.rest
 import grails.transaction.Transactional
-import groovy.sql.Sql
+import org.transmartproject.rest.misc.SQLUtils
 
 import javax.sql.DataSource
 import java.util.regex.Matcher
@@ -30,7 +30,7 @@ class ValidationService {
     }
 
     def validateSubjects(studyId, subjects) {
-        def sql = sql(dataSource)
+        def sql = SQLUtils.sql(dataSource)
         def study = studiesResourceService.getStudyById(studyId as String)
         String trial = getTrialShortName(study.ontologyTerm.fullName, sql) + "%"
 
@@ -51,7 +51,7 @@ class ValidationService {
     }
 
     def validateSamples(studyId, sampleIds) {
-        def sql = sql(dataSource)
+        def sql = SQLUtils.sql(dataSource)
         def sampleHash = new HashSet<String>()
         sampleIds.each { sampleHash.add(it as String) }
 
@@ -69,7 +69,7 @@ class ValidationService {
     }
 
     def validatePlatformIds(platform, platformIds) {
-        def sql = sql(dataSource)
+        def sql = SQLUtils.sql(dataSource)
         def query = "select gpl.platform from de_gpl_info gpl where gpl.title = ?"
         def gpl = sql.firstRow(query, [platform]).platform
 
@@ -90,11 +90,5 @@ class ValidationService {
     private static String getTrialShortName(studyPath, sql) {
         String trialQuery = "select c.sourcesystem_cd from i2b2 c where c.c_hlevel = 1 and c.c_fullname = ?"
         return sql.firstRow(trialQuery, [studyPath]).sourcesystem_cd
-    }
-
-    private static Sql sql(DataSource source) {
-        Sql sql = new Sql(source)
-        sql.withStatement { stmt -> stmt.setFetchSize(5000) }
-        return sql
     }
 }

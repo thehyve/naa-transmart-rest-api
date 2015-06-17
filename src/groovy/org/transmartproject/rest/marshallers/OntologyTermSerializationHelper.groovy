@@ -24,7 +24,6 @@
  */
 
 package org.transmartproject.rest.marshallers
-
 import grails.rest.Link
 import org.transmartproject.core.ontology.OntologyTerm
 import org.transmartproject.rest.StudyLoadingService
@@ -67,12 +66,24 @@ class OntologyTermSerializationHelper implements HalOrJsonSerializationHelper<On
                 name:     term.name,
                 key:      term.key,
                 fullName: term.fullName,
+                visualAttributes: getVisualAttributes(term, obj)
         ]
     }
+
 
     @Override
     Set<String> getEmbeddedEntities(OntologyTermWrapper object) {
         [] as Set
+
+    }
+
+    private static List<String> getVisualAttributes(OntologyTerm term, OntologyTermWrapper obj) {
+        def attributes = [] + term.visualAttributes
+        def leafType = obj.getLeafType()
+        if (leafType != null) {
+            attributes << leafType
+        }
+        return attributes
     }
 
 }

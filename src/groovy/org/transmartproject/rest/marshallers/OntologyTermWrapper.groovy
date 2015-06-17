@@ -36,13 +36,24 @@ import org.transmartproject.core.ontology.OntologyTerm
 class OntologyTermWrapper {
 
     OntologyTerm delegate
+    String leafType
 
-    OntologyTermWrapper(OntologyTerm term) {
+    OntologyTermWrapper(OntologyTerm term, String leafType) {
+        this.leafType = leafType
         this.delegate = term
     }
 
-    static List<OntologyTermWrapper> wrap(List<OntologyTerm> source) {
-        source.collect { new OntologyTermWrapper(it) }
+    OntologyTermWrapper(OntologyTerm term) {
+        this(term, null)
+    }
+
+    static List<OntologyTermWrapper> wrap(List<OntologyTerm> source, Map<String, String> leafTypes) {
+        source.collect { new OntologyTermWrapper(it, leafTypes[it.getFullName()]) }
+    }
+
+    // Return TEXT or NUMERIC if it's a leaf, null otherwise
+    String getLeafType() {
+        leafType
     }
 
     boolean isHighDim() {

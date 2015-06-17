@@ -24,9 +24,7 @@
  */
 
 package org.transmartproject.rest
-
 import grails.rest.Link
-import groovy.transform.TypeChecked
 import org.transmartproject.core.ontology.ConceptsResource
 import org.transmartproject.rest.marshallers.ContainerResponseWrapper
 import org.transmartproject.rest.marshallers.OntologyTermWrapper
@@ -38,13 +36,15 @@ class ConceptController {
 
     StudyLoadingService studyLoadingServiceProxy
     ConceptsResource conceptsResourceService
+    OntologyHelperService ontologyHelperService
 
     /** GET request on /studies/XXX/concepts/
      *  This will return the list of concepts, where each concept will be rendered in its short format
     */
     def index() {
         def concepts = studyLoadingServiceProxy.study.ontologyTerm.allDescendants
-        def conceptWrappers = OntologyTermWrapper.wrap(concepts)
+        def leafTypes = ontologyHelperService.getLeafTypes(concepts)
+        def conceptWrappers = OntologyTermWrapper.wrap(concepts, leafTypes)
         respond wrapConcepts(conceptWrappers)
     }
 
@@ -57,7 +57,8 @@ class ConceptController {
         use (OntologyTermCategory) {
             String key = id.keyFromURLPart studyLoadingServiceProxy.study
             def concept = conceptsResourceService.getByKey(key)
-            respond new OntologyTermWrapper(concept)
+            def leafTypes = ontologyHelperService.getLeafTypes([concept])
+            respond new OntologyTermWrapper(concept, leafTypes[concept.getFullName()] as String)
         }
     }
 
