@@ -15,13 +15,15 @@ class PlatformService {
 
     def listPlatforms() {
         def platforms = []
-        SQLUtils.sql(dataSource).eachRow("SELECT gpl.title FROM DE_GPL_INFO gpl", { row ->
-            platforms << row.title
+
+        SQLUtils.sql(dataSource).eachRow("SELECT gpl.platform, gpl.title, count(ma.probe_id) platform_size FROM DE_GPL_INFO gpl JOIN DE_MRNA_ANNOTATION ma ON gpl.platform = ma.gpl_id GROUP BY gpl.platform, gpl.title", { row ->
+            platforms <<  [
+                platform: row.platform,
+                title: row.title,
+                size: row.platform_size
+            ]
         })
 
-        return [
-            "platforms" : platforms
-        ]
-    }
+        return ["platforms" : platforms] }
 
 }
