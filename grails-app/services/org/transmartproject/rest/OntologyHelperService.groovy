@@ -20,10 +20,11 @@ class OntologyHelperService {
 
     // -------------------- Public Methods --------------------
 
-    def getLeafTypes(List<OntologyTerm> concepts) {
+    def getExtendedAttributes(List<OntologyTerm> concepts) {
         def query = """\
 SELECT
     ib.c_fullname,
+    cc.patient_count,
     CASE
         WHEN ib.c_visualattributes = 'LA'
             THEN CASE WHEN EXISTS (
@@ -40,6 +41,7 @@ SELECT
         END type
 FROM
   I2B2 ib
+  LEFT JOIN CONCEPT_COUNTS cc ON ib.c_fullname = cc.concept_path
 WHERE
   ib.c_fullname IN (%s)
   AND ib.c_visualattributes = 'LA'
@@ -60,7 +62,10 @@ WHERE
                     }
                     rset = pstmt.executeQuery()
                     while (rset.next()) {
-                        extendedAttrs[rset.getString("c_fullname")] = rset.getString("type")
+                        extendedAttrs[rset.getString("c_fullname")] = [
+                            'leafType' : rset.getString("type"),
+                            'patientCount' : rset.getInt("patient_count")
+                        ]
                     }
                 } finally {
                     pstmt?.close()

@@ -43,8 +43,8 @@ class ConceptController {
     */
     def index() {
         def concepts = studyLoadingServiceProxy.study.ontologyTerm.allDescendants
-        def leafTypes = ontologyHelperService.getLeafTypes(concepts)
-        def conceptWrappers = OntologyTermWrapper.wrap(concepts, leafTypes)
+        def extendedAttrs = ontologyHelperService.getExtendedAttributes(concepts)
+        def conceptWrappers = OntologyTermWrapper.wrap(concepts, extendedAttrs)
         respond wrapConcepts(conceptWrappers)
     }
 
@@ -57,8 +57,8 @@ class ConceptController {
         use (OntologyTermCategory) {
             String key = id.keyFromURLPart studyLoadingServiceProxy.study
             def concept = conceptsResourceService.getByKey(key)
-            def leafTypes = ontologyHelperService.getLeafTypes([concept])
-            respond new OntologyTermWrapper(concept, leafTypes[concept.getFullName()] as String)
+            def extendedAttrs = ontologyHelperService.getExtendedAttributes([concept])
+            respond new OntologyTermWrapper(concept, extendedAttrs[concept.getFullName()] as Map)
         }
     }
 
