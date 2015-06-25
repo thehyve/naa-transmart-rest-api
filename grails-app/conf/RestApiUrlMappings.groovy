@@ -80,20 +80,7 @@ class RestApiUrlMappings {
 
         '/platforms' (method: 'GET', controller: 'platform', action: 'index')
 
-        "/validation/studies/$studyId/platforms/$platform/tissue_type/$tissueType" (
-                method: 'GET', controller: 'validation', action: 'indexByTissueType'
-        )
+        "/platforms/$platform/platform_ids" (method: 'GET', controller: 'platform', action: 'indexWithIds')
 
-        "/validation/studies/$studyId/subjects" (
-                method: 'GET', controller: 'validation', action: 'indexBySubjects'
-        )
-
-        "/validation/studies/$studyId/samples" (
-                method: 'GET', controller: 'validation', action: 'indexBySamples'
-        )
-
-        "/validation/platforms/$platform/platform_ids" (
-                method: 'GET', controller: 'validation', action: 'indexByPlatformIds'
-        )
     }
 }
