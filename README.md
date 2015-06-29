@@ -77,7 +77,7 @@ The RESTful API supports authentication with OAuth 2.0. The client application n
 1. End-users need to be redirected to the following OAuth URI to be visited in a web browser. Here they can authenticate themselves for this client application:
 `{oauthServer}/oauth/authorize?response_type=code&client_id={clientId}&client_secret={clientSecret}&redirect_uri={oauthServer}/oauth/verify`
 
-2. After the end-user has succesfuly authenticated at this URI, a request token is supplied, which the end-user needs to copy and paste as input to your client.
+2. After the end-user has successfully authenticated at this URI, a request token is supplied, which the end-user needs to copy and paste as input to your client.
 
 3. Your client needs to exchange this request token for a semi-permanent access token, using the following HTTP request: GET `{oauthServer}/oauth/token?grant_type=authorization_code&client_id={clientId}&client_secret={clientSecret}&code={requestToken}&redirect_uri={oauthServer}/oauth/verify`
 
