@@ -42,6 +42,10 @@ class OntologyTermCategory {
 
         def pathPart = term.key - study.ontologyTerm.key ?: ROOT_CONCEPT_PATH
 
+        // Forward slashes are obviously allowed in RFC 3986, but we need to
+        // double encode them in order to be able to pull them back out
+        pathPart = pathPart.replaceAll("/", "%2f")
+
         // more characters are allowed by RFC 3986, but it doesn't hurt to
         // percent encode extra characters
         pathPart.replaceAll(~/[^a-zA-Z0-9-._\\]/) { String it ->
@@ -65,7 +69,7 @@ class OntologyTermCategory {
         }
 
         study.ontologyTerm.key +
-                part.replace('/', '\\') + '\\'
+                part.replace('/', '\\').replaceAll("%2[fF]", "/") + '\\'
     }
 
 }
