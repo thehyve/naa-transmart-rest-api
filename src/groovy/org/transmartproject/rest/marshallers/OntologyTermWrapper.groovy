@@ -60,7 +60,7 @@ class OntologyTermWrapper {
 
     // Return TEXT or NUMERIC if it's a leaf, null otherwise
     String getLeafType() {
-        return extendedAttrs['leafType'] as String
+        return extendedAttrs?.getAt('leafType') as String
     }
 
     boolean isHighDim() {
