@@ -102,6 +102,11 @@ class HighDimDataServiceTests {
         testData.saveAll()
     }
 
+    private void setUpSnp() {
+        testData.snpLzData = new SnpLzTestData(concept.code)
+        testData.saveAll()
+    }
+
     @Test
     void testMrnaDefaultRealProjection() {
         setUpMrna()
@@ -136,6 +141,15 @@ class HighDimDataServiceTests {
         HighDimResult result = getProtoBufResult('vcf', projection)
 
         assertResults(result, 'vcf', projection, [value: String])
+    }
+
+    @Test
+    void testSnp() {
+        setUpSnp()
+        String projection = 'all_data'
+        HighDimResult result = getProtoBufResult('snp_lz', projection)
+
+        assertResults(result, 'snp_lz', projection)
     }
 
     private void assertResults(HighDimResult input,

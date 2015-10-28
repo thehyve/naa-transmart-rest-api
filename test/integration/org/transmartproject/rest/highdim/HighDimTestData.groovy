@@ -38,11 +38,13 @@ class HighDimTestData {
     MrnaTestData mrnaData
     AcghTestData acghData
     VcfTestData vcfData
+    SnpLzTestData snpLzData
 
     void saveAll() {
         conceptData.saveAll()
         mrnaData?.saveAll()
         acghData?.saveAll()
         vcfData?.saveAll()
+        snpLzData?.saveAll()
     }
 }
