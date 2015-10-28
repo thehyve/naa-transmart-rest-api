@@ -45,6 +45,7 @@ import org.transmartproject.core.dataquery.highdim.projections.Projection
 import org.transmartproject.db.dataquery.InMemoryTabularResult
 import org.transmartproject.db.dataquery.highdim.acgh.AcghTestData
 import org.transmartproject.db.dataquery.highdim.mrna.MrnaTestData
+import org.transmartproject.db.dataquery.highdim.snp_lz.SnpLzTestData
 import org.transmartproject.db.dataquery.highdim.vcf.VcfTestData
 import org.transmartproject.db.ontology.I2b2
 import org.transmartproject.rest.HighDimDataService
@@ -289,7 +290,9 @@ class HighDimResultHeaderMatcher extends DiagnosingMatcher<HighDimResult> {
                     protobufColumns.find { it.name == curExpectedProperty }
 
             def expectedDataType = Number.isAssignableFrom(
-                    dataProperties[curExpectedProperty]) ?
+                    dataProperties[curExpectedProperty]) ||
+                    (dataProperties[curExpectedProperty].isPrimitive() &&
+                            dataProperties[curExpectedProperty] != char.class) ?
                     ColumnType.DOUBLE :
                     ColumnType.STRING
             if (expectedDataType != gottenSpec.type) {
