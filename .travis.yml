@@ -1,8 +1,5 @@
-nguage: php # to have .travis installing the php version we indicate
 sudo: false
 
-php:
-    - 5.6
 cache:
     directories:
         - $HOME/.m2
@@ -17,8 +14,8 @@ before_install:
     - source ~/ts-travis/maven_dep.sh
 
 install:
-    - maybe_build_maven_dep $(travis_get_owner)/${PREFIX}transmart-core-api core-api
-    - maybe_make_inline_grails_dep $(travis_get_owner)/${PREFIX}transmart-core-db core-db . transmart-core-db-tests
+    - build_maven_dep $(travis_get_owner)/${PREFIX}transmart-core-api master core-api
+    - make_inline_grails_dep $(travis_get_owner)/${PREFIX}transmart-core-db master core-db . transmart-core-db-tests
 
 script:
     - grails refresh-dependencies --non-interactive
