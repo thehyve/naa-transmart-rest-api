@@ -23,6 +23,18 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/*
+ * This version of the rest API unfortunately has a class called
+ * OntologyHelperService that bypasses the API and issues queries directly
+ * to the database. It also uses the concept_counts table, which core-db
+ * doesn't know about and therefore is never present in the test in-memory
+ * database that is used to run the tests.
+ * Disable this feature by default when running the plugin as a standalone
+ * application (note that this configuration is not used when the plugin
+ * is included in transmartApp)
+ */
+org.transmartproject.rest.disableExtendedAttributes = true
+
 grails.databinding.convertEmptyStringsToNull = false
 grails.databinding.trimStrings = false
 

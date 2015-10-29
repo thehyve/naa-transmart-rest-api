@@ -24,7 +24,10 @@
  */
 
 package org.transmartproject.rest
+
+import com.google.common.collect.ImmutableMap
 import grails.rest.Link
+import grails.util.Holders
 import org.transmartproject.core.ontology.ConceptsResource
 import org.transmartproject.rest.marshallers.ContainerResponseWrapper
 import org.transmartproject.rest.marshallers.OntologyTermWrapper
@@ -43,7 +46,10 @@ class ConceptController {
     */
     def index() {
         def concepts = studyLoadingServiceProxy.study.ontologyTerm.allDescendants
-        def extendedAttrs = ontologyHelperService.getExtendedAttributes(concepts)
+        def extendedAttrs = ImmutableMap.of()
+        if (useExtendedAttributes) {
+            extendedAttrs = ontologyHelperService.getExtendedAttributes(concepts)
+        }
         def conceptWrappers = OntologyTermWrapper.wrap(concepts, extendedAttrs)
         respond wrapConcepts(conceptWrappers)
     }
@@ -57,7 +63,10 @@ class ConceptController {
         use (OntologyTermCategory) {
             String key = id.keyFromURLPart studyLoadingServiceProxy.study
             def concept = conceptsResourceService.getByKey(key)
-            def extendedAttrs = ontologyHelperService.getExtendedAttributes([concept])
+            def extendedAttrs = ImmutableMap.of()
+            if (useExtendedAttributes) {
+                extendedAttrs = ontologyHelperService.getExtendedAttributes([concept])
+            }
             respond new OntologyTermWrapper(concept, extendedAttrs[concept.getFullName()] as Map)
         }
     }
@@ -76,6 +85,10 @@ class ConceptController {
                         )
                 ]
         )
+    }
+
+    private boolean isUseExtendedAttributes() {
+        Holders.config.org.transmartproject.rest.disableExtendedAttributes != true
     }
 
 }
