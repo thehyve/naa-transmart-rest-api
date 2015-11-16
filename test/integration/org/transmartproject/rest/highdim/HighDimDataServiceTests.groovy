@@ -289,10 +289,10 @@ class HighDimResultHeaderMatcher extends DiagnosingMatcher<HighDimResult> {
             HighDimProtos.ColumnSpec gottenSpec =
                     protobufColumns.find { it.name == curExpectedProperty }
 
-            def expectedDataType = Number.isAssignableFrom(
-                    dataProperties[curExpectedProperty]) ||
+            def expectedDataType = Number.isAssignableFrom(dataProperties[curExpectedProperty]) ||
                     (dataProperties[curExpectedProperty].isPrimitive() &&
-                            dataProperties[curExpectedProperty] != char.class) ?
+                            dataProperties[curExpectedProperty] != char &&
+                            dataProperties[curExpectedProperty] != boolean) ?
                     ColumnType.DOUBLE :
                     ColumnType.STRING
             if (expectedDataType != gottenSpec.type) {
