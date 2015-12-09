@@ -70,7 +70,7 @@ class ObservationsResourceTests extends ResourceTestCase {
                 allOf(
                         hasEntry(is('subject'), allOf(
                                 hasEntry('id', subjectId),
-                                hasEntry('sex', 'UNKOWN'),
+                                hasEntry('sex', 'UNKNOWN'),
                                 hasEntry('trial', studyId),
                                 hasEntry('inTrialId', 'SUBJ_ID_1'),
                                 hasEntry('religion', null),
